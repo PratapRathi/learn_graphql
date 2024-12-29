@@ -8,6 +8,7 @@ import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHt
 import { startStandaloneServer } from "@apollo/server/standalone";
 import mergeResolver from "./resolvers/index.js"
 import mergeTypeDef from "./typeDefs/index.js";
+import connectDb from "./db/connectDb.js";
 
 dotenv.config();
 const app = express();
@@ -24,13 +25,16 @@ await server.start();
 // Setup an express middleware, handle cors and body parser
 // an Apollo server instances and optional configuration options
 app.use(
-  "/",
+  "/graphql",
   cors(),
   express.json(),
   expressMiddleware(server, {
     context: async ({ req }) => ({ req }),
   })
 )
+
+// Connect to database
+await connectDb();
 
 // Modified server startup
 await new Promise((resolve) => httpServer.listen({ port: 4000 }, resolve));
