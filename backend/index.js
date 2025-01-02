@@ -59,7 +59,7 @@ app.use(
   "/graphql",
   cors({
     credentials: true,
-    origin: "http://localhost:3000",
+    origin: "http://localhost:4400",
   }),
   express.json(),
   expressMiddleware(server, {
@@ -73,4 +73,4 @@ await connectDb();
 // Modified server startup
 await new Promise((resolve) => httpServer.listen({ port: 4000 }, resolve));
 
-console.log(`🚀 Server ready at http://localhost:4000/graphql`);
+console.log(`🚀 Server ready at http://localhost:4400/graphql`);
