@@ -28,10 +28,11 @@ const transactionResolvers = {
     Mutation: {
         createTransaction: async(_, {input}, context) => {
             try {
-                const newTransaction = Transaction.create({
+                const newTransaction = Transaction({
                     ...input,
                     userId: await context.getUser()._id
                 });
+                await newTransaction.save();
                 await newTransaction.save();
                 return newTransaction;
             } catch (err) {
