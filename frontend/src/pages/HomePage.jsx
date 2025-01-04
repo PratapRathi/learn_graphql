@@ -3,6 +3,9 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { MdLogout } from "react-icons/md";
 import TransactionForm from "../components/ui/TransactionForm.jsx";
 import Cards from "../components/ui/Cards.jsx";
+import toast from "react-hot-toast";
+import { useMutation } from "@apollo/client";
+import { LOGOUT } from "../../graphql/mutations/user.mutation.js";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -23,11 +26,22 @@ const HomePage = () => {
 		],
 	};
 
-	const handleLogout = () => {
-		console.log("Logging out...");
-	};
+	const [logout, {loading, error, client}] = useMutation(LOGOUT, {
+		refetchQueries: ["getAuthUser"],
+	});
 
-	const loading = false;
+	const handleLogout = async () => {
+		const toastId =toast.loading("Logging out...");
+		try {
+			await logout();
+			client.resetStore();
+			toast.success("Logged out successfully",{id: toastId});
+		} catch (err) {
+			console.log(err);
+			console.log("GraphQl Error: ", error);
+			toast.error(error?.message,{id: toastId});
+		}
+	};
 
 	return (
 		<>

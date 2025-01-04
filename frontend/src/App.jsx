@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import NotFound from "./pages/NotFound.jsx";
 import Header from "./components/ui/Header.jsx";
 import SignUpPage from "./pages/SignUpPage.jsx";
@@ -11,8 +11,7 @@ import { Toaster } from "react-hot-toast";
 
 function App() {
   const { data, error, loading } = useQuery(GET_AUTH_USER);
-  console.log("Authenticated User: ", data);
-  console.log("Error: ", error);
+  error && console.log("Error: ", error);
 
   if (loading) {
     return <div>Loading...</div>;
@@ -21,10 +20,24 @@ function App() {
     <>
       {data?.authUser && <Header />}
       <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/signup" element={<SignUpPage />} />
-        <Route path="/transaction/:id" element={<TransactionPage />} />
+        <Route
+          path="/"
+          element={data?.authUser ? <HomePage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/login"
+          element={!data?.authUser ? <LoginPage /> : <Navigate to="/" />}
+        />
+        <Route
+          path="/signup"
+          element={!data?.authUser ? <SignUpPage /> : <Navigate to="/" />}
+        />
+        <Route
+          path="/transaction/:id"
+          element={
+            data?.authUser ? <TransactionPage /> : <Navigate to="/login" />
+          }
+        />
         <Route path="*" element={<NotFound />} />
       </Routes>
       <Toaster />

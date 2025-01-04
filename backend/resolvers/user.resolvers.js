@@ -60,7 +60,7 @@ const userResolvers = {
         return { message: "Logged out successful" };
       } catch (err) {
         console.error("Error in Logout: " + err);
-        throw new Error(err.message || "Something went wrong");
+        throw new Error(err?.message || "Something went wrong");
       }
     },
   },

@@ -14,19 +14,23 @@ const SignUpPage = () => {
     gender: "",
   });
 
-  const [signUp, { data, loading, error }] = useMutation(SIGN_UP);
+  const [signUp, { data, loading, error }] = useMutation(SIGN_UP,{
+    refetchQueries: ["getAuthUser"],
+  });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const toastId = toast.loading("Signing up...");
     try {
       await signUp({
         variables: {
           input: signUpData,
         },
       });
-      toast.success(`${data?.signUp?.name} Sign Up Successfully`);
+      toast.success(`${data?.signUp?.name} Sign Up Successfully`,{id: toastId});
     } catch (err) {
-      console.log("Error: ", error, err);
+      console.log("Error: ", error?.message, err);
+      toast.error(error?.message, {id: toastId});
     }
   };
 
