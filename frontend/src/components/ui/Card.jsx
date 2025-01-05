@@ -54,7 +54,7 @@ const Card = ({ transaction }) => {
           <h2 className="text-lg font-bold text-white">{category}</h2>
           <div className="flex items-center gap-2">
             <FaTrash className={"cursor-pointer"} onClick={handleDelete} />
-            <Link to={`/transaction/123`}>
+            <Link to={`/transaction/${transaction._id}`}>
               <HiPencilAlt className="cursor-pointer" size={20} />
             </Link>
           </div>
